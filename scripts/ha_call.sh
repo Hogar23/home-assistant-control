@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/ha_env.sh"
+
+: "${HA_TOKEN:?Missing HA_TOKEN}"
+
+METHOD="${1:-GET}"   # GET/POST
+PATH_PART="${2:-/api/states}"
+DATA="${3:-}"
+
+# URL resolution:
+# 1) HA_URL (explicit override; no fallback)
+# 2) HA_URL_LOCAL (preferred)
+# 3) HA_URL_PUBLIC (fallback if local transport fails)
+
+CANDIDATES=()
+if [[ -n "${HA_URL:-}" ]]; then
+  CANDIDATES+=("${HA_URL%/}")
+elif [[ -n "${HA_URL_LOCAL:-}" ]]; then
+  CANDIDATES+=("${HA_URL_LOCAL%/}")
+  if [[ -n "${HA_URL_PUBLIC:-}" && "${HA_URL_PUBLIC%/}" != "${HA_URL_LOCAL%/}" ]]; then
+    CANDIDATES+=("${HA_URL_PUBLIC%/}")
+  fi
+elif [[ -n "${HA_URL_PUBLIC:-}" ]]; then
+  CANDIDATES+=("${HA_URL_PUBLIC%/}")
+else
+  echo "Error: Missing URL. Set one of HA_URL, HA_URL_LOCAL, or HA_URL_PUBLIC." >&2
+  exit 1
+fi
+
+attempt_request() {
+  local base_url="$1"
+
+  if [[ "$METHOD" == "GET" ]]; then
+    curl -sS \
+      -H "Authorization: Bearer $HA_TOKEN" \
+      -H "Content-Type: application/json" \
+      "$base_url$PATH_PART"
+  else
+    curl -sS -X "$METHOD" \
+      -H "Authorization: Bearer $HA_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "$DATA" \
+      "$base_url$PATH_PART"
+  fi
+}
+
+LAST_ERR=""
+for i in "${!CANDIDATES[@]}"; do
+  base="${CANDIDATES[$i]}"
+  if output="$(attempt_request "$base" 2>&1)"; then
+    if [[ "$i" -gt 0 ]]; then
+      echo "[ha_call] Switched to fallback URL: $base" >&2
+    fi
+    printf '%s' "$output"
+    exit 0
+  fi
+  LAST_ERR="$output"
+  # Fallback is only for transport-level errors (DNS/refused/timeout/etc).
+  # HTTP API errors are handled by caller scripts based on response body.
+  if [[ "$i" -lt $((${#CANDIDATES[@]} - 1)) ]]; then
+    echo "[ha_call] Primary URL failed, trying fallback..." >&2
+  fi
+done
+
+echo "$LAST_ERR" >&2
+exit 1
