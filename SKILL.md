@@ -1,7 +1,7 @@
 ---
 name: home-assistant-control
 description: Control and inspect Home Assistant via REST API for entities, states, services, scenes, scripts, and automations. Use when the user asks to turn devices on/off, set values like brightness or temperature, trigger scenes/scripts/automations, or check current home/sensor status.
-homepage: https://github.com/Hogar23/openclaw-skill-home-assistant-control
+homepage: https://github.com/Hogar23/home-assistant-control
 metadata:
   {
     "openclaw": {
@@ -44,9 +44,9 @@ Use Home Assistant REST API with a long-lived access token.
 ## Secrets handling (publish-safe)
 
 - Keep keys/URLs in an external file, not in the skill folder.
-- Default private env file path: `~/.openclaw/private/home-assistant.env`
-- Optional override: set `HA_ENV_FILE=/absolute/path/to/file.env`
-- `scripts/ha_call.sh` and `scripts/self_check.sh` auto-load this external env file.
+- Set `HA_ENV_FILE=/absolute/path/to/file.env` when you want file-based secret loading.
+- If `HA_ENV_FILE` is not set, scripts only use environment variables already present in the shell.
+- `scripts/ha_call.sh` and `scripts/self_check.sh` load env file only when `HA_ENV_FILE` is provided.
 
 ## Core workflow
 
@@ -69,7 +69,7 @@ Headers:
 
 ## Scripts
 
-- `scripts/ha_env.sh` — loads private env file (`HA_ENV_FILE` or `~/.openclaw/private/home-assistant.env`).
+- `scripts/ha_env.sh` — loads env file only when `HA_ENV_FILE` is explicitly set.
 - `scripts/ha_call.sh` — generic API caller for Home Assistant.
 - `scripts/fill_entities_md.sh` — generate `references/entities.md` from `GET /api/states`.
   - Full map: `./scripts/fill_entities_md.sh`

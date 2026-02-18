@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 # Load Home Assistant env vars from an external file (optional).
-# Priority:
-# 1) HA_ENV_FILE (if set)
-# 2) ~/.openclaw/private/home-assistant.env (if exists)
+# Behavior:
+# - Loads only when HA_ENV_FILE is explicitly set.
+# - Does not read default files implicitly.
 
 set -euo pipefail
 
-ENV_FILE="${HA_ENV_FILE:-$HOME/.openclaw/private/home-assistant.env}"
+ENV_FILE="${HA_ENV_FILE:-}"
 
-if [[ -f "$ENV_FILE" ]]; then
+if [[ -n "$ENV_FILE" ]]; then
+  if [[ ! -f "$ENV_FILE" ]]; then
+    echo "Error: HA_ENV_FILE is set but file does not exist: $ENV_FILE" >&2
+    exit 1
+  fi
+
   # Export values from env file to current shell.
   set -a
   # shellcheck disable=SC1090

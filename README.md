@@ -19,10 +19,10 @@ OpenClaw skill for controlling and inspecting Home Assistant via REST API.
 
 ## Configuration
 
-Use private env file (recommended):
+Use a private env file by explicitly pointing to it:
 
-- `~/.openclaw/private/home-assistant.env`
-- or set `HA_ENV_FILE=/absolute/path/to/env`
+- set `HA_ENV_FILE=/absolute/path/to/env`
+- example path: `~/.openclaw/private/home-assistant.env`
 
 Required:
 
@@ -34,7 +34,13 @@ Required:
 
 ### Example private env file
 
-Create `~/.openclaw/private/home-assistant.env`:
+Create a private file (example `~/.openclaw/private/home-assistant.env`), then set:
+
+```bash
+export HA_ENV_FILE="$HOME/.openclaw/private/home-assistant.env"
+```
+
+Example file content:
 
 ```env
 HA_TOKEN=YOUR_LONG_LIVED_ACCESS_TOKEN
@@ -50,7 +56,7 @@ HA_URL_PUBLIC=https://your-home.example.com
 - The scripts only call Home Assistant API paths under `/api/...`.
 - Base URLs must be `http://` or `https://`.
 - For remote/public access, use HTTPS.
-- Secrets are loaded from `~/.openclaw/private/home-assistant.env` (or `HA_ENV_FILE`) and should never be committed.
+- Secrets are loaded only when `HA_ENV_FILE` is explicitly set, and should never be committed.
 
 ## Main Scripts
 
