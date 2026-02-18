@@ -32,7 +32,18 @@ Required:
   - optional `HA_URL_LOCAL` (tried first when override not set)
   - optional `HA_URL` (explicit override)
 
-See `.env.example` for template.
+### Example private env file
+
+Create `~/.openclaw/private/home-assistant.env`:
+
+```env
+HA_TOKEN=YOUR_LONG_LIVED_ACCESS_TOKEN
+HA_URL_PUBLIC=https://your-home.example.com
+# Optional local URL (tried first when HA_URL is not set)
+# HA_URL_LOCAL=http://homeassistant.local:8123
+# Optional explicit override (no fallback)
+# HA_URL=http://homeassistant.local:8123
+```
 
 ## Main Scripts
 
