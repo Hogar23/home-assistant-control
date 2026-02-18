@@ -4,15 +4,13 @@ description: Control and inspect Home Assistant via REST API for entities, state
 homepage: https://github.com/Hogar23/openclaw-skill-home-assistant-control
 metadata:
   {
-    "openclaw":
-      {
-        "emoji": "🏠",
-        "requires":
-          {
-            "bins": ["bash", "curl", "jq"],
-            "env": ["HA_TOKEN", "HA_URL_PUBLIC"],
-          },
-      },
+    "openclaw": {
+      "emoji": "🏠",
+      "requires": {
+        "bins": ["bash", "curl", "jq"],
+        "env": ["HA_TOKEN", "HA_URL_PUBLIC", "HA_URL_LOCAL", "HA_URL", "HA_ENV_FILE"]
+      }
+    }
   }
 ---
 
