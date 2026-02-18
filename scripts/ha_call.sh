@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/ha_env.sh"
 
 : "${HA_TOKEN:?Missing HA_TOKEN}"
+: "${HA_URL_PUBLIC:?Missing HA_URL_PUBLIC}"
 
 METHOD="${1:-GET}"   # GET/POST
 METHOD="$(printf '%s' "$METHOD" | tr '[:lower:]' '[:upper:]')"
@@ -35,11 +36,8 @@ elif [[ -n "${HA_URL_LOCAL:-}" ]]; then
   if [[ -n "${HA_URL_PUBLIC:-}" && "${HA_URL_PUBLIC%/}" != "${HA_URL_LOCAL%/}" ]]; then
     CANDIDATES+=("${HA_URL_PUBLIC%/}")
   fi
-elif [[ -n "${HA_URL_PUBLIC:-}" ]]; then
-  CANDIDATES+=("${HA_URL_PUBLIC%/}")
 else
-  echo "Error: Missing URL. Set one of HA_URL, HA_URL_LOCAL, or HA_URL_PUBLIC." >&2
-  exit 1
+  CANDIDATES+=("${HA_URL_PUBLIC%/}")
 fi
 
 for base in "${CANDIDATES[@]}"; do

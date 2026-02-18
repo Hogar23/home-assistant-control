@@ -27,8 +27,8 @@ Use a private env file by explicitly pointing to it:
 Required:
 
 - `HA_TOKEN`
-- URL strategy:
-  - `HA_URL_PUBLIC` (cloud setups; enough by itself)
+- `HA_URL_PUBLIC` (canonical target and fallback)
+- Optional URL strategy:
   - optional `HA_URL_LOCAL` (tried first when override not set)
   - optional `HA_URL` (explicit override)
 

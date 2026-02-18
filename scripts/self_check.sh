@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/ha_env.sh"
 #
 # Verifies:
 # - Required tools (curl, jq)
-# - Required env vars (HA_TOKEN + one URL var)
+# - Required env vars (HA_TOKEN + HA_URL_PUBLIC)
 # - Home Assistant reachability and auth
 # - /api/states JSON response validity
 #
@@ -51,6 +51,7 @@ check_cmd jq
 
 echo
 check_env HA_TOKEN
+check_env HA_URL_PUBLIC
 
 CANDIDATES=()
 if [[ -n "${HA_URL:-}" ]]; then
@@ -63,12 +64,9 @@ elif [[ -n "${HA_URL_LOCAL:-}" ]]; then
     CANDIDATES+=("${HA_URL_PUBLIC%/}")
     ok "Fallback URL configured: HA_URL_PUBLIC"
   fi
-elif [[ -n "${HA_URL_PUBLIC:-}" ]]; then
+else
   CANDIDATES+=("${HA_URL_PUBLIC%/}")
   ok "URL source: HA_URL_PUBLIC"
-else
-  err "Missing URL var. Set one of HA_URL, HA_URL_LOCAL, or HA_URL_PUBLIC"
-  FAIL=1
 fi
 
 if [[ "$FAIL" -ne 0 ]]; then

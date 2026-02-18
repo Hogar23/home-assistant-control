@@ -8,7 +8,7 @@ metadata:
       "emoji": "🏠",
       "requires": {
         "bins": ["bash", "curl", "jq"],
-        "env": ["HA_TOKEN", "HA_URL_PUBLIC", "HA_URL_LOCAL", "HA_URL", "HA_ENV_FILE"]
+        "env": ["HA_TOKEN", "HA_URL_PUBLIC"]
       }
     }
   }
@@ -26,7 +26,7 @@ Use Home Assistant REST API with a long-lived access token.
 - `curl`
 - `jq`
 - Home Assistant long-lived token (`HA_TOKEN`)
-- One URL variable: `HA_URL` (override), or `HA_URL_LOCAL`, or `HA_URL_PUBLIC`
+- Home Assistant public base URL (`HA_URL_PUBLIC`)
 
 ### For skill maintainers (packaging/validation)
 
@@ -36,9 +36,9 @@ Use Home Assistant REST API with a long-lived access token.
 ## Required environment variables
 
 - `HA_TOKEN` (required)
-- URL selection (public-first friendly):
-  - `HA_URL_PUBLIC` alone is enough for cloud setups
-  - if both are set (and no `HA_URL` override), `HA_URL_LOCAL` is tried first, then fallback to `HA_URL_PUBLIC`
+- `HA_URL_PUBLIC` (required; canonical target and fallback)
+- Optional URL behavior:
+  - if `HA_URL_LOCAL` is set (and no `HA_URL` override), local is tried first, then fallback to `HA_URL_PUBLIC`
   - `HA_URL` is an explicit override (if set, used directly)
 
 ## Secrets handling (publish-safe)
