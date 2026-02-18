@@ -1,6 +1,19 @@
 ---
 name: home-assistant-control
 description: Control and inspect Home Assistant via REST API for entities, states, services, scenes, scripts, and automations. Use when the user asks to turn devices on/off, set values like brightness or temperature, trigger scenes/scripts/automations, or check current home/sensor status.
+homepage: https://github.com/Hogar23/openclaw-skill-home-assistant-control
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "🏠",
+        "requires":
+          {
+            "bins": ["bash", "curl", "jq"],
+            "env": ["HA_TOKEN", "HA_URL_PUBLIC"],
+          },
+      },
+  }
 ---
 
 # Home Assistant Control
@@ -89,5 +102,5 @@ Headers:
 ## Publishing notes
 
 - Keep examples generic (`example_*` IDs), no personal hostnames/tokens.
-- Do not commit `.env` (only `.env.example`).
+- Do not commit `.env` or any private env file with real tokens.
 - Keep the skill focused: API workflow + reusable scripts + entity reference.
