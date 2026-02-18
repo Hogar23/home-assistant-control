@@ -69,7 +69,7 @@ Headers:
 
 ## Scripts
 
-- `scripts/ha_env.sh` — loads env file only when `HA_ENV_FILE` is explicitly set.
+- `scripts/ha_env.sh` — loads env file only when `HA_ENV_FILE` is explicitly set, using safe KEY=VALUE parsing (no `source`/`eval`).
 - `scripts/ha_call.sh` — generic API caller for Home Assistant.
 - `scripts/fill_entities_md.sh` — generate `references/entities.md` from `GET /api/states`.
   - Full map: `./scripts/fill_entities_md.sh`
@@ -93,6 +93,7 @@ Headers:
 - If target entity is ambiguous, ask a follow-up question.
 - Keep API paths scoped to Home Assistant endpoints only (`/api/...`).
 - Use only HTTP(S) Home Assistant base URLs (`HA_URL*`), prefer HTTPS for public access.
+- Avoid code execution when loading env files: parse key/value pairs, do not use `source` on untrusted paths.
 
 ## Reference files
 

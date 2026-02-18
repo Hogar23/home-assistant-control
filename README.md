@@ -57,6 +57,7 @@ HA_URL_PUBLIC=https://your-home.example.com
 - Base URLs must be `http://` or `https://`.
 - For remote/public access, use HTTPS.
 - Secrets are loaded only when `HA_ENV_FILE` is explicitly set, and should never be committed.
+- Env files are parsed as plain `KEY=VALUE` data (no `source`/shell execution).
 
 ## Main Scripts
 
