@@ -91,6 +91,8 @@ Headers:
 - Confirm before high-impact actions (locks, alarms, garage/doors, heating shutdown).
 - Do not print raw token values.
 - If target entity is ambiguous, ask a follow-up question.
+- Keep API paths scoped to Home Assistant endpoints only (`/api/...`).
+- Use only HTTP(S) Home Assistant base URLs (`HA_URL*`), prefer HTTPS for public access.
 
 ## Reference files
 

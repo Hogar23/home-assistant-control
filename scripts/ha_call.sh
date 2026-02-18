@@ -8,8 +8,19 @@ source "$SCRIPT_DIR/ha_env.sh"
 : "${HA_TOKEN:?Missing HA_TOKEN}"
 
 METHOD="${1:-GET}"   # GET/POST
+METHOD="$(printf '%s' "$METHOD" | tr '[:lower:]' '[:upper:]')"
 PATH_PART="${2:-/api/states}"
 DATA="${3:-}"
+
+if [[ "$METHOD" != "GET" && "$METHOD" != "POST" ]]; then
+  echo "Error: Unsupported method '$METHOD'. Use GET or POST." >&2
+  exit 1
+fi
+
+if [[ "$PATH_PART" != /api/* ]]; then
+  echo "Error: Path must start with /api/ (got: $PATH_PART)" >&2
+  exit 1
+fi
 
 # URL resolution:
 # 1) HA_URL (explicit override; no fallback)
@@ -31,16 +42,27 @@ else
   exit 1
 fi
 
+for base in "${CANDIDATES[@]}"; do
+  if [[ "$base" != http://* && "$base" != https://* ]]; then
+    echo "Error: Invalid URL scheme in '$base'. Use http:// or https://" >&2
+    exit 1
+  fi
+done
+
 attempt_request() {
   local base_url="$1"
 
   if [[ "$METHOD" == "GET" ]]; then
     curl -sS \
+      --connect-timeout 8 \
+      --max-time 20 \
       -H "Authorization: Bearer $HA_TOKEN" \
       -H "Content-Type: application/json" \
       "$base_url$PATH_PART"
   else
     curl -sS -X "$METHOD" \
+      --connect-timeout 8 \
+      --max-time 20 \
       -H "Authorization: Bearer $HA_TOKEN" \
       -H "Content-Type: application/json" \
       -d "$DATA" \

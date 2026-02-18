@@ -45,6 +45,13 @@ HA_URL_PUBLIC=https://your-home.example.com
 # HA_URL=http://homeassistant.local:8123
 ```
 
+## Security model
+
+- The scripts only call Home Assistant API paths under `/api/...`.
+- Base URLs must be `http://` or `https://`.
+- For remote/public access, use HTTPS.
+- Secrets are loaded from `~/.openclaw/private/home-assistant.env` (or `HA_ENV_FILE`) and should never be committed.
+
 ## Main Scripts
 
 - `scripts/self_check.sh`
